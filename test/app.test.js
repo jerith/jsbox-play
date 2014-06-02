@@ -31,12 +31,14 @@ describe("app", function() {
                         reply: [
                             'Hi there! What do you want to do?',
                             '1. Show this menu again',
-                            '2. Exit'
+                            '2. Short and stout?',
+                            '3. Exit'
                         ].join('\n')
                     })
                     .run();
             });
         });
+
 
         describe("when the user asks to see the menu again", function() {
             it("should show the menu again", function() {
@@ -48,9 +50,24 @@ describe("app", function() {
                         reply: [
                             'Hi there! What do you want to do?',
                             '1. Show this menu again',
-                            '2. Exit'
+                            '2. Short and stout?',
+                            '3. Exit'
                         ].join('\n')
                     })
+                    .run();
+            });
+        });
+
+        describe("when the user is a teapot", function() {
+            it("should say thank you and end the session", function() {
+                return tester
+                    .setup.user.state('states:start')
+                    .input('2')
+                    .check.interaction({
+                        state: 'states:teapot',
+                        reply: '-=[ teapot ]=-'
+                    })
+                    .check.reply.ends_session()
                     .run();
             });
         });
@@ -59,7 +76,7 @@ describe("app", function() {
             it("should say thank you and end the session", function() {
                 return tester
                     .setup.user.state('states:start')
-                    .input('2')
+                    .input('3')
                     .check.interaction({
                         state: 'states:end',
                         reply: 'Thanks, cheers!'

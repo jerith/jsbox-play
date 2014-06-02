@@ -1,17 +1,15 @@
 module.exports = function() {
     return [{
         "request": {
-            "method": "POST",
-            "url": "http://example.com",
-            "data": {
-                "bar": "baz"
-            }
+            "method": "GET",
+            "url": "http://httpbin.org/status/418",
+            "headers": {
+                "Content-Type": ["text/plain"],
+            },
         },
         "response": {
-            "code": 200,
-            "data": {
-                "ham": "spam"
-            }
+            "code": 418,
+            "body": "-=[ teapot ]=-",
         }
     }];
 };

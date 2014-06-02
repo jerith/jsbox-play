@@ -11,9 +11,14 @@ go.app = function() {
     var Choice = vumigo.states.Choice;
     var ChoiceState = vumigo.states.ChoiceState;
     var EndState = vumigo.states.EndState;
+    var HttpApi = vumigo.http.api.HttpApi;
 
     var GoApp = App.extend(function(self) {
         App.call(self, 'states:start');
+
+        self.init = function() {
+            self.http = new HttpApi(self.im);
+        };
 
         self.states.add('states:start', function(name) {
             return new ChoiceState(name, {
@@ -21,6 +26,7 @@ go.app = function() {
 
                 choices: [
                     new Choice('states:start', 'Show this menu again'),
+                    new Choice('states:teapot', 'Short and stout?'),
                     new Choice('states:end', 'Exit')],
 
                 next: function(choice) {
@@ -34,6 +40,17 @@ go.app = function() {
                 text: 'Thanks, cheers!',
                 next: 'states:start'
             });
+        });
+
+        self.states.add('states:teapot', function(name) {
+            return self
+                .http.get('http://httpbin.org/status/418')
+                .catch(function(err) {  // 418 is an error code.
+                    return new EndState(name, {
+                        text: err.response.body,
+                        next: 'states:start'
+                    });
+                });
         });
     });
 
